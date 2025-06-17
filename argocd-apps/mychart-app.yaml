@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mychart-app
+  namespace: argocd       # Argo CD installs usually in argocd ns
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/hoopdad/argohelm.git
+    targetRevision: main
+    path: mychart        # path inside repo where your Helm chart lives
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
